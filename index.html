@@ -1,57 +1,69 @@
-<!DOCTYPE html> 
-<html lang="ru"> 
-  <head> 
-    <meta charset="UTF-8"> 
-    <title>Airport Ambient</title> 
-    <style> 
-      body { font-family: sans-serif; background: #0a0a0a; color: #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; margin: 0; text-align: center; }
-iframe, 
-      audio {
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
-}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Airport Ambient</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0a0a0a;
+      color: #ddd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+    }
+    iframe, audio {
+      border: none;
+    }
+    .slider {
+      width: 200px;
+    }
+    label {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Airport Ambient Radio</h1>
 
-.slider {
-  width: 200px;
-  margin-top: 5px;
-}
+  <!-- SoundCloud embed -->
+<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/soundcloud%253Aplaylists%253A1573126828&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
 
-h1 {
-  font-weight: 400;
-  letter-spacing: 1px;
-}
+</iframe>
+  <div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
+       <a href="https://soundcloud.com/lostsounds-official/sets/deep-ambient" title="Deep Ambient" target="_blank" style="color: #cccccc; text-decoration: none;">Deep Ambient</a>
+  </div>
 
-.block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
+  <label>Ambient volume</label>
+  <input type="range" class="slider" id="scVolume" min="0" max="1" step="0.01" value="0.5">
 
-</style> 
-  </head>
-  <body> 
-    <h1>Airport Ambient Radio</h1> 
-    <!-- SoundCloud --> 
- <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/soundcloud%253Aplaylists%253A1807976914&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/trapeia" title="trapeia" target="_blank" style="color: #cccccc; text-decoration: none;">trapeia</a> · <a href="https://soundcloud.com/trapeia/sets/sad-dark-ambient" title="sad &amp; dark ambient" target="_blank" style="color: #cccccc; text-decoration: none;">sad &amp; dark ambient</a></div>
-    <div class="block"> 
-      <label for="scVolume">Ambient volume
-      </label> 
-      <input type="range" class="slider" id="scVolume" min="0" max="1" step="0.01" value="0.5"> 
-    </div> 
-    <!-- LiveATC --> 
-    <div class="block"> 
-      <audio id="atc-audio" controls autoplay> 
-      </audio> 
-      <label for="atcVolume">ATC volume
-      </label> 
-      <input type="range" class="slider" id="atcVolume" min="0" max="1" step="0.01" value="0.5"> 
-    </div> 
-    <script src="https://w.soundcloud.com/player/api.js">
-      
-    </script> 
-    <script> // --- SoundCloud volume control --- const scIframe = document.getElementById('sc-player'); const widget = SC.Widget(scIframe); const scVolume = document.getElementById('scVolume'); widget.bind(SC.Widget.Events.READY, function() { widget.setVolume(scVolume.value * 100); }); scVolume.addEventListener('input', (e) => { widget.setVolume(e.target.value * 100); }); // --- LiveATC audio --- const atcAudio = document.getElementById('atc-audio'); const atcVolume = document.getElementById('atcVolume'); // Новосибирск (UNNT) atcAudio.src = "https://d.liveatc.net/unnt"; atcAudio.volume = atcVolume.value; atcVolume.addEventListener('input', (e) => { atcAudio.volume = e.target.value; }); 
-/script> 
-</body> 
+  <!-- LiveATC stream -->
+  <audio id="atc" controls autoplay loop>
+     <source src="https://s1-fmt2.liveatc.net/unnt?nocache=2025102213231114075" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+  </audio>
+  <label>LiveATC volume</label>
+  <input type="range" class="slider" id="atcVolume" min="0" max="1" step="0.01" value="0.5">
+
+  <script>
+    // LiveATC громкость
+    const atcAudio = document.getElementById('atc');
+    document.getElementById('atcVolume').addEventListener('input', e => {
+      atcAudio.volume = e.target.value;
+    });
+
+    // SoundCloud громкость — через API
+    const iframe = document.getElementById('sc-player');
+    const widget = SC.Widget(iframe);
+
+    document.getElementById('scVolume').addEventListener('input', e => {
+      widget.setVolume(e.target.value * 100); // API принимает 0–100
+    });
+  </script>
+
+  <script src="https://w.soundcloud.com/player/api.js"></script>
+</body>
 </html>
