@@ -72,7 +72,7 @@
   <div class="block">
     <iframe 
       id="liveatc-frame"
-      src="https://www.liveatc.net/hlisten.php?mount=unnt&icao=unnt"
+      src="https://s1-fmt2.liveatc.net/unnt"
       width="320" height="120"
       scrolling="no"
       frameborder="0">
@@ -109,7 +109,7 @@
 
     airportSelect.addEventListener('change', e => {
       const code = e.target.value;
-      atcFrame.src = `https://www.liveatc.net/hlisten.php?mount=${code}_twr&icao=${code}`;
+      atcFrame.src = `https://s1-fmt2.liveatc.net/${code};
     });
   </script>
 </body>
